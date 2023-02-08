@@ -212,17 +212,20 @@ export class LineBuilder {
     }
 
     doForTailAndHead<T, R extends Function = (element: T, isHead: boolean) => void >(
-        target: T[],
+        target: T[] | undefined,
         callback: R
     ): LineBuilder
     doForTailAndHead<
         T,
         R extends Function = (element: T, isHead: boolean) => void,
     >(
-        target: T[],
+        target: T[] | undefined,
         tailCallback: R,
         headCallback: R = tailCallback
     ): LineBuilder {
+        if (!target) {
+            return this
+        }
         target.slice(0, -1).forEach((value) => {
             tailCallback(value, false)
         })
