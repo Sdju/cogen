@@ -1,3 +1,3 @@
 export interface Target {
-    __type: string
+  __type: string
 }
