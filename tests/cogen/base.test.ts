@@ -6,18 +6,18 @@ describe('Base methods of Cogen', () => {
     const cogen = new Cogen()
     const transformers = {
       css: {
-        _ () {},
-        selector () {},
+        _() {},
+        selector() {},
 
         rule: {
-          _ () {},
+          _() {},
 
-          selector () {}
+          selector() {}
         }
       },
       json: {
-        _ () {},
-        object () {}
+        _() {},
+        object() {}
       }
     }
     cogen.addTransformers(transformers)

@@ -17,18 +17,18 @@ export class Cogen {
   public target: Target = { __type: 'error:noTarget' }
   public builder: LineBuilder = new LineBuilder(this.rules as BaseRules)
 
-  public use (plugin: Plugin): Cogen {
+  public use(plugin: Plugin): Cogen {
     plugin(this)
     return this
   }
 
-  public pushBuilder (): Cogen {
+  public pushBuilder(): Cogen {
     this.builderStack.push(this.builder)
     this.builder = new LineBuilder(this.rules as BaseRules)
     return this
   }
 
-  public popBuilder (): Cogen {
+  public popBuilder(): Cogen {
     this.builder = this.builderStack.pop() as LineBuilder
     return this
   }
@@ -45,49 +45,49 @@ export class Cogen {
     return target as T
   }
 
-  public pushRules (rules: Rules): Cogen {
+  public pushRules(rules: Rules): Cogen {
     this.rulesStack.push(this.rules)
     this.rules = mergeDeep({}, this.rules, rules) as Rules
     return this
   }
 
-  public extendRules (rules: Rules): Cogen {
+  public extendRules(rules: Rules): Cogen {
     this.rules = mergeDeep(this.rules, rules) as Rules
     return this
   }
 
-  public popRules (): Cogen {
+  public popRules(): Cogen {
     this.rules = this.rulesStack.pop() as Rules
     return this
   }
 
   /**
-     * Добавление произвольного генератора
-     *
-     * Особое имя для трансформатора: _ - ознгачает корень без постфикса
-     * @Example addTransformers({
-     *     css: {
-     *         _() {
-     *             ...
-     *         }
-     *
-     *         selector() {
-     *
-     *         }
-     *     },
-     *     json: {
-     *         _() {
-     *             ...
-     *         }
-     *
-     *         object() {
-     *
-     *         }
-     *     }
-     * })
-     * Создаст 4 трансформатора css и css:selector, json и json:object
-     * */
-  public addTransformers (transformers: TransformerDescription, prefix: string = ''): Cogen {
+   * Добавление произвольного генератора
+   *
+   * Особое имя для трансформатора: _ - ознгачает корень без постфикса
+   * @Example addTransformers({
+   *     css: {
+   *         _() {
+   *             ...
+   *         }
+   *
+   *         selector() {
+   *
+   *         }
+   *     },
+   *     json: {
+   *         _() {
+   *             ...
+   *         }
+   *
+   *         object() {
+   *
+   *         }
+   *     }
+   * })
+   * Создаст 4 трансформатора css и css:selector, json и json:object
+   * */
+  public addTransformers(transformers: TransformerDescription, prefix: string = ''): Cogen {
     Object.entries(transformers).forEach(([name, transformer]) => {
       if (typeof transformer === 'object') {
         this.addTransformers(transformer, `${prefix}${name}:`)
@@ -104,9 +104,9 @@ export class Cogen {
   }
 
   /**
-     * Выполяет трансформацию для текущего источника
-     * */
-  public run (): Cogen {
+   * Выполяет трансформацию для текущего источника
+   * */
+  public run(): Cogen {
     const transformer = this.transformers[this.target.__type] as Transformer | undefined
     if (!transformer) {
       throw new Error(`Unresolved transformer type "${this.target.__type}"`)
@@ -116,9 +116,9 @@ export class Cogen {
   }
 
   /**
-     * Пытается выполнить трансформацию для указанного источника
-     * */
-  public runFor (target: Target): Cogen {
+   * Пытается выполнить трансформацию для указанного источника
+   * */
+  public runFor(target: Target): Cogen {
     this.pushTarget(target)
     this.run()
     this.popTarget()
@@ -126,8 +126,8 @@ export class Cogen {
   }
 
   /**
-     * Выполяет генерацию кода с указанным контентом и правилами генерации
-     * */
+   * Выполяет генерацию кода с указанным контентом и правилами генерации
+   * */
   public generateBy<T extends Target>(content: T, rules: Rules): string {
     this.pushRules(rules)
     this.pushTarget(content)

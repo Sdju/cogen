@@ -34,7 +34,7 @@ interface JsonArrayTarget extends Target {
   content: Target[]
 }
 
-export default function jsonPlugin (cogen: Cogen): void {
+export default function jsonPlugin(cogen: Cogen): void {
   cogen.extendRules({
     json: {
       tab: '  ',
@@ -52,13 +52,13 @@ export default function jsonPlugin (cogen: Cogen): void {
 
   cogen.addTransformers({
     json: {
-      _ () {
+      _() {
         cogen.builder.pushTab(cogen.rules.json.tab)
         cogen.runFor(cogen.popTarget<JsonTarget>().content)
         cogen.builder.popTab()
       },
 
-      object () {
+      object() {
         const builder = cogen.builder
         const rules = cogen.rules.json as JsonRules
         const content = cogen.target as JsonObjectTarget
@@ -90,7 +90,7 @@ export default function jsonPlugin (cogen: Cogen): void {
           .add('}')
       },
 
-      array () {
+      array() {
         const builder = cogen.builder
         const rules = cogen.rules.json as JsonRules
         const target = cogen.target as JsonArrayTarget
@@ -116,12 +116,12 @@ export default function jsonPlugin (cogen: Cogen): void {
           .add(']')
       },
 
-      number () {
+      number() {
         const value = String((cogen.target as JsonNumberTarget).content)
         cogen.builder.add(value)
       },
 
-      string () {
+      string() {
         const value = (cogen.target as JsonStringTarget).content
         cogen.builder.add(JSON.stringify(value))
       }

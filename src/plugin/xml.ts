@@ -31,7 +31,7 @@ interface XmlContentTarget extends Target {
   content: string
 }
 
-export default function xmlLoader (cogen: Cogen): void {
+export default function xmlLoader(cogen: Cogen): void {
   cogen.extendRules({
     xml: {
       tab: '    ',
@@ -49,7 +49,7 @@ export default function xmlLoader (cogen: Cogen): void {
 
   cogen.addTransformers({
     xml: {
-      _ () {
+      _() {
         cogen.builder
           .pushTab(cogen.rules.xml.tab)
           .doForTailAndHead(
@@ -61,7 +61,7 @@ export default function xmlLoader (cogen: Cogen): void {
           .popTab()
       },
 
-      tag () {
+      tag() {
         const builder = cogen.builder
         const rules = cogen.rules.xml as XmlRules
         const target = cogen.target as XmlTagTarget
@@ -112,7 +112,7 @@ export default function xmlLoader (cogen: Cogen): void {
           .add('>')
       },
 
-      content () {
+      content() {
         cogen.builder.add((cogen.target as XmlContentTarget).content)
       }
     }

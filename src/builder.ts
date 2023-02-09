@@ -33,7 +33,7 @@ export class LineBuilder {
    * */
   rules: BaseRules
 
-  constructor (rules: BaseRules) {
+  constructor(rules: BaseRules) {
     this.rules = rules
     this.tab = rules.tab
   }
@@ -41,7 +41,7 @@ export class LineBuilder {
   /**
    * Добавление некоторой части к строке
    * */
-  add (part: string): LineBuilder {
+  add(part: string): LineBuilder {
     this.line.push(part)
     return this
   }
@@ -49,7 +49,7 @@ export class LineBuilder {
   /**
    * Аналогично lineBuilder.add, но игнорируется при минификации
    * */
-  addWs (part: string): LineBuilder {
+  addWs(part: string): LineBuilder {
     if (!this.rules.minify) {
       this.line.push(part)
     }
@@ -59,7 +59,7 @@ export class LineBuilder {
   /**
    * Аналогично lineBuilder.add, но только в случае выполнении condition
    * */
-  addIf (condition: boolean, part: string): LineBuilder {
+  addIf(condition: boolean, part: string): LineBuilder {
     if (condition) {
       this.line.push(part)
     }
@@ -69,7 +69,7 @@ export class LineBuilder {
   /**
    * Аналогично lineBuilder.addWs и lineBuilder.addIf одновременно
    * */
-  addWsIf (condition: boolean, part: string): LineBuilder {
+  addWsIf(condition: boolean, part: string): LineBuilder {
     if (!this.rules.minify && condition) {
       this.line.push(part)
     }
@@ -79,7 +79,7 @@ export class LineBuilder {
   /**
    * Добавляет отступ в стек отступов
    * */
-  pushTab (tab: string): LineBuilder {
+  pushTab(tab: string): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -91,7 +91,7 @@ export class LineBuilder {
   /**
    * Переходит к предыдущему отступу в стеке отступов
    * */
-  popTab (): LineBuilder {
+  popTab(): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -102,7 +102,7 @@ export class LineBuilder {
   /**
    * Пересобирает текущие части строки как единую строку
    * */
-  joinLine (): string {
+  joinLine(): string {
     const string = this.line.join('')
     this.line = [string]
     return string
@@ -111,7 +111,7 @@ export class LineBuilder {
   /**
    * Переходим на следующую строку с возможность сохранения смещения или его обнулением
    * */
-  nextLine (withShift: boolean = true): LineBuilder {
+  nextLine(withShift: boolean = true): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -120,7 +120,7 @@ export class LineBuilder {
     return this
   }
 
-  nextLineIf (condition: boolean, withShift: boolean = true): LineBuilder {
+  nextLineIf(condition: boolean, withShift: boolean = true): LineBuilder {
     if (condition) {
       this.nextLine(withShift)
     }
@@ -130,7 +130,7 @@ export class LineBuilder {
   /**
    * Увеличиваем отступ с возможностью перехода сразу на следующую строку
    * */
-  levelUp (toNext: boolean = true): LineBuilder {
+  levelUp(toNext: boolean = true): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -143,7 +143,7 @@ export class LineBuilder {
     return this
   }
 
-  levelUpIf (condition: boolean, toNext: boolean = true): LineBuilder {
+  levelUpIf(condition: boolean, toNext: boolean = true): LineBuilder {
     if (condition) {
       this.levelUp(toNext)
     }
@@ -153,7 +153,7 @@ export class LineBuilder {
   /**
    * Уменьшаем отступ с возможностью перехода сразу на следующую строку
    * */
-  levelDown (toNext: boolean = true): LineBuilder {
+  levelDown(toNext: boolean = true): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -180,7 +180,7 @@ export class LineBuilder {
    *     b = 2,
    *     c = 3;
    * */
-  saveAlignment (): LineBuilder {
+  saveAlignment(): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -190,7 +190,7 @@ export class LineBuilder {
     return this
   }
 
-  dropAlignment (): LineBuilder {
+  dropAlignment(): LineBuilder {
     if (this.rules.minify) {
       return this
     }
@@ -202,7 +202,7 @@ export class LineBuilder {
   /**
    * Собираем все части в готовый код
    * */
-  build (): string {
+  build(): string {
     const newLine = this.rules.minify ? '' : '\n'
     return [...this.lines, this.line]
       .map(parts => parts.join(''))

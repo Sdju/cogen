@@ -14,6 +14,7 @@ module.exports = {
     'no-restricted-syntax': 0,
     'no-continue': 0,
     'import/prefer-default-export': 0,
-    '@typescript-eslint/strict-boolean-expressions': 'off'
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/space-before-function-paren': ['error', 'never']
   },
 };
