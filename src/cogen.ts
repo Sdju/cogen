@@ -5,7 +5,10 @@ import { mergeDeep } from './utils'
 
 type Plugin = (cogen: Cogen) => void
 
-type Transformer = () => void
+type Transformer<
+  T extends Target = any,
+  R extends Rules = any
+> = (builder: LineBuilder, target: T, rules: R) => void
 
 interface TransformerDescription {
   [key: string]: Transformer | TransformerDescription
@@ -62,30 +65,7 @@ export class Cogen {
   }
 
   /**
-   * Добавление произвольного генератора
-   *
-   * Особое имя для трансформатора: _ - ознгачает корень без постфикса
-   * @Example addTransformers({
-   *     css: {
-   *         _() {
-   *             ...
-   *         }
-   *
-   *         selector() {
-   *
-   *         }
-   *     },
-   *     json: {
-   *         _() {
-   *             ...
-   *         }
-   *
-   *         object() {
-   *
-   *         }
-   *     }
-   * })
-   * Создаст 4 трансформатора css и css:selector, json и json:object
+   * Добавление произвольного набора генераторов
    * */
   public addTransformers(transformers: TransformerDescription, prefix: string = ''): Cogen {
     Object.entries(transformers).forEach(([name, transformer]) => {
@@ -111,17 +91,27 @@ export class Cogen {
     if (!transformer) {
       throw new Error(`Unresolved transformer type "${this.target.__type}"`)
     }
-    transformer()
+    transformer(this.builder, this.target, this.builder.rules)
     return this
   }
 
   /**
    * Пытается выполнить трансформацию для указанного источника
    * */
-  public runFor(target: Target): Cogen {
+  public runFor(target: Target, rules?: BaseRules): Cogen {
+    let oldRules: BaseRules | undefined
+    if (rules) {
+      this.builder.pushTab(rules.tab)
+      oldRules = this.builder.rules
+      this.builder.rules = rules
+    }
     this.pushTarget(target)
     this.run()
     this.popTarget()
+    if (rules) {
+      this.builder.popTab()
+      this.builder.rules = oldRules as BaseRules
+    }
     return this
   }
 

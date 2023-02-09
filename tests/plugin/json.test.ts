@@ -10,7 +10,7 @@ describe('JSON generation', () => {
       __type: 'json',
       content: {
         __type: 'json:object',
-        fields: {
+        content: {
           a: {
             __type: 'json:string',
             content: 'test'
@@ -64,7 +64,7 @@ describe('JSON generation', () => {
           },
           {
             __type: 'json:object',
-            fields: {}
+            content: {}
           }
         ]
       }

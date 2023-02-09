@@ -38,6 +38,10 @@ export class LineBuilder {
     this.tab = rules.tab
   }
 
+  run() {
+
+  }
+
   /**
    * Добавление некоторой части к строке
    * */
