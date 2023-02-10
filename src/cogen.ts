@@ -98,7 +98,7 @@ export class Cogen {
   /**
    * Пытается выполнить трансформацию для указанного источника
    * */
-  public runFor(target: Target, rules?: BaseRules): Cogen {
+  public runFor<T extends Target>(target: T, rules?: BaseRules): Cogen {
     let oldRules: BaseRules | undefined
     if (rules) {
       this.builder.pushTab(rules.tab)
@@ -133,6 +133,13 @@ export class Cogen {
   public static DEFAULT_RULES: BaseRules = {
     tab: '  ',
     minify: false
+  }
+
+  public isTarget<T>(data: T): boolean {
+    if (!data || typeof data !== 'object') {
+      return false
+    }
+    return '__type' in data
   }
 
   protected rulesStack: Rules[] = []

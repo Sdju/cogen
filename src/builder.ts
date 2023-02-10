@@ -1,4 +1,5 @@
 import { type BaseRules } from './rules'
+import { type Cogen } from './cogen'
 
 /**
  * Класс для генерации нашего кода более императивным путем
@@ -73,7 +74,7 @@ export class LineBuilder {
   /**
    * Аналогично lineBuilder.addWs и lineBuilder.addIf одновременно
    * */
-  addWsIf(condition: boolean, part: string): LineBuilder {
+  addWsIf(condition: boolean, part: string = ' '): LineBuilder {
     if (!this.rules.minify && condition) {
       this.line.push(part)
     }
@@ -203,6 +204,18 @@ export class LineBuilder {
     return this
   }
 
+  clearLine(): LineBuilder {
+    this.line = [this.joinLine().trim()]
+    return this
+  }
+
+  clearLineIf(condition: boolean): LineBuilder {
+    if (condition) {
+      this.clearLine()
+    }
+    return this
+  }
+
   /**
    * Собираем все части в готовый код
    * */
@@ -213,14 +226,19 @@ export class LineBuilder {
       .join(newLine)
   }
 
-  doForTailAndHead<T, R extends (element: T, isHead: boolean) => void = (element: T, isHead: boolean) => void >(
+  doForTailAndHead<
+    T,
+    R extends (element: T, isHead: boolean, index: number) => void =
+    (element: T, isHead: boolean, index: number) => void
+  >(
     target: T[] | undefined,
     callback: R
   ): LineBuilder
   doForTailAndHead<
-        T,
-        R extends (element: T, isHead: boolean) => void = (element: T, isHead: boolean) => void,
-    >(
+    T,
+    R extends (element: T, isHead: boolean, index: number) => void =
+    (element: T, isHead: boolean, index: number) => void
+  >(
     target: T[] | undefined,
     tailCallback: R,
     headCallback: R = tailCallback
@@ -228,12 +246,13 @@ export class LineBuilder {
     if (!target) {
       return this
     }
-    target.slice(0, -1).forEach((value) => {
-      tailCallback(value, false)
+    target.slice(0, -1).forEach((value, index) => {
+      tailCallback(value, false, index)
     })
-    const lastElement = target[target.length - 1]
+    const lastIndex = target.length - 1
+    const lastElement = target[lastIndex]
     if (lastElement) {
-      headCallback(lastElement, true)
+      headCallback(lastElement, true, lastIndex)
     }
     return this
   }
